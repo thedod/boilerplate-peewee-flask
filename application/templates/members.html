@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Member area &mdash; {{ super() }}{% endblock %}
+{% from "bootstrap/utils.html" import icon %}
+{% block content %}
+  <div class="container">
+    <div class="jumbotron">
+      <h1>Member area</h1>
+      <p>{{ icon('lock') }} Stuff here is exclusive.</p>
+    </div>
+{%- endblock %}
