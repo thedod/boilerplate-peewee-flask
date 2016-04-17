@@ -10,9 +10,10 @@ from flask_bootstrap import __version__ as FLASK_BOOTSTRAP_VERSION
 from flask_nav.elements import Navbar, View, Subgroup, Link, Text, Separator
 from flask_security import login_required, current_user
 from markupsafe import escape
+from flask import current_app
 
 from .forms import SignupForm
-from .nav import nav
+from .nav import nav, ExtendedNavbar
 
 frontend = Blueprint('frontend', __name__)
 
@@ -21,33 +22,38 @@ frontend = Blueprint('frontend', __name__)
 # navbar has an usual amount of Link-Elements, more commonly you will have a
 # lot more View instances.
 def frontend_top_nav():
-        menu = [
+        navbar = ExtendedNavbar(
             View('Boilerplate App', 'frontend.index'),
-            View('Home', 'frontend.index'),
-            View('Forms Example', 'frontend.example_form'),
-            View('Members', 'frontend.members'),
-            #This screws gunicorn
-            #View('Debug-Info', 'debug.debug_root'),
-            Subgroup(
-                'Docs',
-                Link('Flask-Bootstrap', 'http://pythonhosted.org/Flask-Bootstrap'),
-                Link('Flask-AppConfig', 'https://github.com/mbr/flask-appconfig'),
-                Link('Flask-Debug', 'https://github.com/mbr/flask-debug'),
-                Separator(),
-                Text('Bootstrap'),
-                Link('Getting started', 'http://getbootstrap.com/getting-started/'),
-                Link('CSS', 'http://getbootstrap.com/css/'),
-                Link('Components', 'http://getbootstrap.com/components/'),
-                Link('Javascript', 'http://getbootstrap.com/javascript/'),
-                Link('Customize', 'http://getbootstrap.com/customize/'),
+            root_class='navbar navbar-inverse navbar-fixed-top',
+            items = (
+                View('Home', 'frontend.index'),
+                View('Forms Example', 'frontend.example_form'),
+                View('Members', 'frontend.members'),
+                #This screws gunicorn
+                #View('Debug-Info', 'debug.debug_root'),
+                Subgroup(
+                    'Docs',
+                    Link('Flask-Bootstrap', 'http://pythonhosted.org/Flask-Bootstrap'),
+                    Link('Flask-AppConfig', 'https://github.com/mbr/flask-appconfig'),
+                    Link('Flask-Debug', 'https://github.com/mbr/flask-debug'),
+                    Separator(),
+                    Text('Bootstrap'),
+                    Link('Getting started', 'http://getbootstrap.com/getting-started/'),
+                    Link('CSS', 'http://getbootstrap.com/css/'),
+                    Link('Components', 'http://getbootstrap.com/components/'),
+                    Link('Javascript', 'http://getbootstrap.com/javascript/'),
+                    Link('Customize', 'http://getbootstrap.com/customize/'),
+                ),
             )
-        ]
+        )
         if current_user.is_active:
-            menu.append(View('Logout {}'.format(current_user.email), 'security.logout'))
-            menu.append(View('Change password', 'security.change_password'))
+            navbar.right_items = (
+                View('Logout {}'.format(current_user.email), 'security.logout'),
+                View('Change password', 'security.change_password'),
+            )
         else:
-            menu.append(View('Login', 'security.login'))
-        return Navbar(*menu)
+            navbar.right_items = ( View('Login', 'security.login'), )
+        return navbar
 
 nav.register_element('frontend_top', frontend_top_nav)
 

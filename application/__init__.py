@@ -17,7 +17,7 @@ from flask_appconfig import AppConfig
 from flask_bootstrap import Bootstrap
 
 from .frontend import frontend
-from .nav import nav
+from .nav import nav, init_custom_nav_renderer
 from .db import database
 from .auth import init_auth
 
@@ -26,16 +26,20 @@ def create_app(configfile=None):
     # in detail inside the Flask docs:
     # http://flask.pocoo.org/docs/patterns/appfactories/
 
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='')
 
     # We use Flask-Appconfig here, but this is not a requirement
     AppConfig(app)
     app.config['BOOTSTRAP_SERVE_LOCAL'] = True
+    app.config['SECURITY_REGISTERABLE'] = True
+    app.config['SECURITY_RECOVERABLE'] = True
+    # Kludge to translate from Heroku to FlaskDB ;)
     if not app.config.has_key('DATABASE') and app.config.has_key('DATABASE_URL'):
         app.config['DATABASE'] = app.config['DATABASE_URL']
     database.init_app(app)
     init_auth(app)
     Bootstrap(app)
+    init_custom_nav_renderer(app)
     nav.init_app(app)
     app.register_blueprint(frontend)
 

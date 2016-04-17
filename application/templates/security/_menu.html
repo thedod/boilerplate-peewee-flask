@@ -1,15 +1,20 @@
 {% if security.registerable or security.recoverable or security.confirmable %}
-<h2>Menu</h2>
-<ul>
-  <li><a href="{{ url_for_security('login') }}{% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}">Login</a></li>
-  {% if security.registerable %}
-  <li><a href="{{ url_for_security('register') }}{% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}">Register</a><br/></li>
-  {% endif %}
-  {% if security.recoverable %}
-  <li><a href="{{ url_for_security('forgot_password') }}">Forgot password</a><br/></li>
-  {% endif %}
-  {% if security.confirmable %}
-  <li><a href="{{ url_for_security('send_confirmation') }}">Confirm account</a></li>
-  {% endif %}
-</ul>
+<div class="panel panel-default">
+  <div class="panel-body text-center">
+    <div class="btn-group" role="group" aria-label="menu">
+      {%- if not request.path.endswith(url_for_security('login')) %}
+        <a class="btn btn-link" href="{{ url_for_security('login') }}{% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}">Login</a>
+      {%- endif %}
+      {%- if security.registerable and not request.path.endswith(url_for_security('register')) %}
+      <a class="btn btn-link" href="{{ url_for_security('register') }}{% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}">Register</a>
+      {%- endif %}
+      {%- if security.recoverable and not request.path.endswith(url_for_security('forgot_password')) %}
+      <a class="btn btn-link" href="{{ url_for_security('forgot_password') }}">Forgot password</a>
+      {%- endif %}
+      {%- if security.confirmable and not request.path.endswith(url_for_security('send_confirmation')) %}
+      <a class="btn btn-link" href="{{ url_for_security('send_confirmation') }}">Confirm account</a>
+      {%- endif %}
+    </div>
+  </div>
+</div>
 {% endif %}
