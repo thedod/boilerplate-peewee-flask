@@ -1,0 +1,9 @@
+flask-appconfig>=0.10
+flask-bootstrap
+flask-nav
+flask-debug
+flask-debugtoolbar
+flask-security
+bcrypt
+peewee
+wtf-peewee

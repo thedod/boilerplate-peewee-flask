@@ -1,9 +1,2 @@
-flask-appconfig>=0.10
-flask-bootstrap
-flask-nav
-flask-debug
-flask-debugtoolbar
-flask-wtf
-peewee
-flask-security
-bcrypt
+-r requirements-local.txt
+-r requirements-heroku.txt

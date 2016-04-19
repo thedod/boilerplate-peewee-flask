@@ -1,4 +1,11 @@
-# The default_config module automatically gets imported by Appconfig, if it
-# exists. See https://pypi.python.org/pypi/flask-appconfig for details.
-# At the moment, everything is read from APPLICATION_* environment variables
-# see env_example
+#Set the following env vars (at .env or via heroku_config.set)
+#APPLICATION_SECRET_KEY=somethinghardertoguessthanthis
+#APPLICATION_SECURITY_PASSWORD_SALT=someotherhardtoguessthing
+#[unless on heroku] also add something like:
+#DATABASE_URL=sqlite:///dev.db
+#see env.md
+DEBUG_TB_INTERCEPT_REDIRECTS = False
+SECURITY_PASSWORD_HASH = 'bcrypt'
+SECURITY_URL_PREFIX = '/auth'
+SECURITY_CHANGEABLE = True
+SECURITY_SECURITY_SEND_PASSWORD_CHANGE_EMAIL = False

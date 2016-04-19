@@ -28,7 +28,6 @@ def frontend_top_nav():
             items = (
                 View('Home', 'frontend.index'),
                 View('Forms Example', 'frontend.example_form'),
-                View('Members', 'frontend.members'),
                 #This screws gunicorn
                 #View('Debug-Info', 'debug.debug_root'),
                 Subgroup(
@@ -44,6 +43,7 @@ def frontend_top_nav():
                     Link('Javascript', 'http://getbootstrap.com/javascript/'),
                     Link('Customize', 'http://getbootstrap.com/customize/'),
                 ),
+                View('Members', 'frontend.members'),
             )
         )
         if current_user.is_active:
@@ -51,6 +51,13 @@ def frontend_top_nav():
                 View('Logout {}'.format(current_user.email), 'security.logout'),
                 View('Change password', 'security.change_password'),
             )
+            if current_user.has_role('staff'):
+                navbar.items += \
+                    (View('Manage site', 'frontend.members'),)  ## @@@
+            if current_user.has_role('admin'):
+                navbar.items += \
+                    (View('Manage users', 'useradmin.index'),)
+                
         else:
             navbar.right_items = ( View('Login', 'security.login'), )
         return navbar

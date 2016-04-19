@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Edit user: {{ user }}{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="page-header"><h1>Edit user: {{ user }}</h1></div>
+    <div class="row">
+      <div class="col-md-12">
+        <form class="form-horizontal" action="" method="POST">
+          {{ form.hidden_tag() }}
+          {{ wtf.form_errors(form, hiddens="only") }}
+          {{ wtf.form_field(form.email, form_type="horizontal") }}
+          {{ wtf.form_field(form.password1, form_type="horizontal") }}
+          {{ wtf.form_field(form.password2, form_type="horizontal") }}
+          {{ wtf.form_field(form.active, form_type="horizontal") }}
+          <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+              <h3>Roles:</h3>
+            </div>
+          </div>
+          {{ wtf.form_errors(form.roles.form, hiddens="only") }}
+          {% for field in form.roles.form %}
+            {{ wtf.form_field(field, form_type="horizontal") }}
+          {%- endfor %}
+          <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+              <input class="btn btn-primary" id="submit" name="submit" value="Update" type="submit">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    {%- include "security/_menu.html" %}
+  </div>
+{% endblock %}
