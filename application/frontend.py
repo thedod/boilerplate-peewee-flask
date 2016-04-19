@@ -34,7 +34,6 @@ def frontend_top_nav():
                     'Docs',
                     Link('Flask-Bootstrap', 'http://pythonhosted.org/Flask-Bootstrap'),
                     Link('Flask-AppConfig', 'https://github.com/mbr/flask-appconfig'),
-                    Link('Flask-Debug', 'https://github.com/mbr/flask-debug'),
                     Separator(),
                     Text('Bootstrap'),
                     Link('Getting started', 'http://getbootstrap.com/getting-started/'),

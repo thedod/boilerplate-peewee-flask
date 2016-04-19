@@ -145,7 +145,8 @@ def _init_auth_datastore(datastore):
         for Model in (User, Role, UserRoles):
             Model.create_table(fail_silently=True)
         admin_user = datastore.create_user(
-            email='temporary@change.me', password=encrypt_password('changeme'),
+            email='youshould@change.me',
+            password=encrypt_password('YouShouldChangeThisPassword!!1'),
             active=True)
         admin_role = datastore.create_role(name='admin')
         datastore.add_role_to_user(admin_user, admin_role)
