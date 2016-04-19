@@ -8,6 +8,13 @@ from .nav import nav, init_custom_nav_renderer
 from .db import database
 from .auth import init_auth, useradmin
 
+def stdout_logging(app):
+    import sys, logging
+    stdout_handler = logging.StreamHandler(stream=sys.stdout)
+    stdout_handler.setLevel(logging.DEBUG)
+    app.logger.setLevel(logging.DEBUG)
+    app.logger.addHandler(stdout_handler)
+
 def create_app(configfile=None):
     # We are using the "Application Factory"-pattern here, which is described
     # in detail inside the Flask docs:
@@ -28,16 +35,6 @@ def create_app(configfile=None):
     nav.init_app(app)
     app.register_blueprint(frontend)
     app.register_blueprint(useradmin, url_prefix='/useradmin')
-
-    #import logging
-    #from logging.handlers import WatchedFileHandler
-    #@app.before_first_request
-    #def setup_logging():
-    #    """
-    #    Setup logging
-    #    """
-    #    handler = WatchedFileHandler("foo.log")
-    #    app.logger.addHandler(handler)
-    #    app.logger.setLevel(logging.INFO)
+    stdout_logging(app)
 
     return app
