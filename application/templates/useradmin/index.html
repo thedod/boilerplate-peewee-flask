@@ -17,7 +17,12 @@
               <th></th>
             </tr>
             <tr class="info">
-              <th style="width:5%" class="text-center"><a class="btn btn-xs btn-primary" href="#">{{ icon('plus') }}</a></th>
+              <th style="width:5%" class="text-center">
+                <a class="btn btn-xs btn-primary"
+                  href="{{ url_for('useradmin.create_or_edit_user') }}">
+                  {{ icon('plus') }}
+                </a>
+              </th>
               <th>Email</th>
               {%- for r in roles %}
                 <th style="width:10%" class="text-center">{{ r }}</th>
@@ -26,7 +31,12 @@
             </tr>
             {%- for u in users %}
               <tr>
-                <td class="text-center"><a class="btn btn-xs btn-primary" href="{{ url_for('useradmin.edit', user_id=u.id) }}">{{ icon('pencil') }}</a></td>
+                <td class="text-center">
+                  <a class="btn btn-xs btn-primary"
+                     href="{{ url_for('useradmin.create_or_edit_user', user_id=u.id) }}">
+                    {{ icon('pencil') }}
+                  </a>
+                </td>
                 <td>{{ u.email }}</td>
                 {%- with ur=user_roles[u] %}
                   {%- for r in roles %}
