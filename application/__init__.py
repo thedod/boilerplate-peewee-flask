@@ -24,9 +24,14 @@ def create_app(configfile=None):
 
     # We use Flask-Appconfig here, but this is not a requirement
     AppConfig(app)
-    # Kludge for heroku
+
+    # Kludges for heroku
+    if 'DYNO' in os.environ:
+        from flask_sslify import SSLify
+        sslify = SSLify(app, permanent=True)
     if not app.config.has_key('DATABASE'):
         app.config['DATABASE'] = os.environ.get('DATABASE_URL')
+
     database.init_app(app)
     init_auth(app)
     app.config['BOOTSTRAP_SERVE_LOCAL'] = True
