@@ -20,7 +20,7 @@ def index(page=None):
 @backend.route('/create_news_item', methods=['GET', 'POST'])
 @backend.route('/edit_news_item/<int:news_item_id>', methods=['GET', 'POST'])
 @login_required
-@roles_required('admin')
+@roles_required('editor')
 def create_or_edit_news_item(news_item_id=None):
     if news_item_id:
         news_item = peewee_flask_utils.get_object_or_404(
