@@ -111,7 +111,7 @@ def user_form(user=None):
             validators=(user and user.id==current_user.id and \
                 [_validate_on(message="You can't deactivate yourself.")] or \
                 []))
-    setattr(UF, 'roles', FormField(_user_roles_form(user)))
+    setattr(UF, 'roles', wtforms.FormField(_user_roles_form(user)))
     return UF
 
 class DeleteForm(Form):
