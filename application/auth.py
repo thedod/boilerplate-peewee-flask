@@ -4,6 +4,7 @@ import peewee
 from flask_wtf import Form
 import wtforms
 from wtforms import validators
+from wtforms.fields import html5 as wtforms_html5
 from wtfpeewee.orm import model_form
 from flask_security import Security, PeeweeUserDatastore, \
     UserMixin, RoleMixin, login_required, roles_required, \
@@ -89,7 +90,8 @@ def _user_roles_form(user=None):
 
 def user_form(user=None):
     class UF(Form):
-        email = wtforms.fields.html5.EmailField('Email', default=user and user.email or None,
+        email = wtforms_html5.EmailField('Email',
+            default=user and user.email or None,
             validators=[
                 validators.DataRequired(),
                 validators.Email(),
