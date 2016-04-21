@@ -49,7 +49,7 @@ def delete_news_item(news_item_id):
     if form.validate_on_submit():
         news_item_title = news_item.title
         news_item.delete_instance()
-        flash("User {} was deleted.".format(news_item_title), "success")
+        flash("News item {} was deleted.".format(news_item_title), "success")
         return redirect(url_for('.index'), code=303)
     return render_template('backend/delete_news_item.html',
         form=form, news_item=news_item)
