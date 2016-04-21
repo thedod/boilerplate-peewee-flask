@@ -2,6 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {%- block title -%}
   {% if user %}Edit user: {{ user }}{% else %}Create a user{% endif %}
+  &mdash; {{ super() }} user admin
 {%- endblock -%}
 {% block content %}
   <div class="container">
@@ -40,6 +41,5 @@
         </form>
       </div>
     </div>
-    {%- include "security/_menu.html" %}
   </div>
 {% endblock %}

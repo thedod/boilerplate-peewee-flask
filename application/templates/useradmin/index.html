@@ -1,54 +1,51 @@
 {%- extends "base.html" %}
 {% from "bootstrap/utils.html" import icon %}
-{% block title %}User admin{% endblock %}
+{% block title %}User admin &mdash; {{ super() }}{% endblock %}
 {%- block content %}
 <div class="container">
+  <div class="page-header">
+    <h1>User admin</h1>
+  </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h3 class="panel-title">Users</h3>
-        </div>
-        <div class="panel-body">
-          <table class="table table-striped table-hover table-bordered table-condensed">
-            <tr class="info">
-              <th colspan=2></th>
-              <th colspan={{ roles.count() }} class="text-center">Roles</th>
-              <th></th>
-            </tr>
-            <tr class="info">
-              <th style="width:5%" class="text-center">
-                <a class="btn btn-xs btn-primary"
-                  href="{{ url_for('useradmin.create_or_edit_user') }}">
-                  {{ icon('plus') }}
+      <table class="table table-striped table-hover table-bordered table-condensed">
+        <tr class="info">
+          <th style="width:5%">
+            <a class="btn btn-xs btn-primary"
+              href="{{ url_for('useradmin.create_or_edit_user') }}">
+              {{ icon('plus') }}
+            </a>
+          </th>
+          <th>Email</th>
+          {%- for r in roles %}
+            <th style="width:10%" class="text-center">{{ r }}</th>
+          {%- endfor %}
+          <th style="width:5%" class="text-center">Active</th>
+        </tr>
+        {%- for u in users %}
+          <tr>
+            <td nowrap>
+              <a class="btn btn-xs btn-primary"
+                 href="{{ url_for('useradmin.create_or_edit_user', user_id=u.id) }}">
+                {{ icon('pencil') }}
+              </a>
+              {% if u.id!=current_user.id %}
+                <a class="btn btn-xs btn-danger"
+                   href="{{ url_for('useradmin.delete_user', user_id=u.id) }}">
+                  {{ icon('remove') }}
                 </a>
-              </th>
-              <th>Email</th>
+              {% endif %}
+            </td>
+            <td>{% if u.id==current_user.id %}<em>{% endif %}{{ u.email }}{% if u.id==current_user.id %}</em>{% endif %}</td>
+            {%- with ur=user_roles[u] %}
               {%- for r in roles %}
-                <th style="width:10%" class="text-center">{{ r }}</th>
+                <td class="text-center">{% if r.name in ur %}{{ icon('ok') }}{% else %}{{ icon('remove') }}{% endif %}</td>
               {%- endfor %}
-              <th style="width:5%" class="text-center">Active</th>
-            </tr>
-            {%- for u in users %}
-              <tr>
-                <td class="text-center">
-                  <a class="btn btn-xs btn-primary"
-                     href="{{ url_for('useradmin.create_or_edit_user', user_id=u.id) }}">
-                    {{ icon('pencil') }}
-                  </a>
-                </td>
-                <td>{{ u.email }}</td>
-                {%- with ur=user_roles[u] %}
-                  {%- for r in roles %}
-                    <td class="text-center">{% if r.name in ur %}{{ icon('ok') }}{% else %}{{ icon('remove') }}{% endif %}</td>
-                  {%- endfor %}
-                {%- endwith %}
-                <td class="text-center">{% if u.active %}{{ icon('ok') }}{% else %}{{ icon('remove') }}{% endif %}</td>
-              </tr>
-            {%- endfor %}
-          </table>
-        </div>
-      </div>
+            {%- endwith %}
+            <td class="text-center">{% if u.active %}{{ icon('ok') }}{% else %}{{ icon('remove') }}{% endif %}</td>
+          </tr>
+        {%- endfor %}
+      </table>
     </div>
   </div>
 </div>

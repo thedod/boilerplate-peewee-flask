@@ -1,2 +1,2 @@
--r requirements-local.txt
+-r requirements-base.txt
 -r requirements-heroku.txt

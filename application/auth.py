@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, \
-    request, abort, redirect, current_app, flash
+    request, abort, redirect, current_app
 from peewee import *
 from flask_wtf import Form
 from wtforms import Form as WtfForm, StringField, PasswordField, \
@@ -9,7 +9,7 @@ from wtforms import validators
 from wtfpeewee.orm import model_form
 from flask_security import Security, PeeweeUserDatastore, \
     UserMixin, RoleMixin, login_required, roles_required, \
-    current_user
+    current_user, logout_user
 from flask_security.utils import encrypt_password
 from .db import database
 
@@ -101,7 +101,7 @@ def _user_roles_form(user=None):
 
 def user_form(user=None):
     class UF(Form):
-        email = EmailField(u'Email', default=user and user.email or None,
+        email = EmailField('Email', default=user and user.email or None,
             validators=[
                 validators.DataRequired(),
                 validators.Email(),
@@ -117,12 +117,18 @@ def user_form(user=None):
                 validators.EqualTo('password1',
                     message="Passwords didn't match.")])
         # Note: by default, a new user is active
-        active = BooleanField(u'Active',default=not user or user.active,
+        active = BooleanField('Active',default=not user or user.active,
             validators=(user and user.id==current_user.id and \
                 [_validate_on(message="You can't deactivate yourself.")] or \
                 []))
-    setattr(UF, u'roles', FormField(_user_roles_form(user)))
+    setattr(UF, 'roles', FormField(_user_roles_form(user)))
     return UF
+
+class DeleteForm(Form):
+    confirmation = BooleanField("I know what I'm doing.",
+        validators=[_validate_on(
+            message="You have to know what you're doing.")])
+    submit = SubmitField("Delete")
  
 ## Views
 
@@ -168,9 +174,33 @@ def create_or_edit_user(user_id=None):
                 ds.add_role_to_user(user, r.name)
             else:
                 ds.remove_role_from_user(user, r.name)
-        flash('Updated user {}'.format(user.email))
+        flash('User {} was updated.'.format(user.email), "success")
         return redirect(url_for('.index'), code=303)
-    return render_template('useradmin/create_or_edit_user.html', form=form, user=user)
+    return render_template('useradmin/create_or_edit_user.html',
+        form=form, user=user)
+
+@useradmin.route('/delete_user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin')
+def delete_user(user_id):
+    try:
+        user = User.get(id=user_id)
+    except User.DoesNotExist:
+        abort(404)
+    if user.id==current_user.id:
+        flash("You can't delete your own user.", "danger")
+        return redirect(url_for('.index'), code=303)
+    form = DeleteForm(request.form)
+    if form.validate_on_submit():
+        user_email = user.email
+        # datastore implementation is buggy. Grrr.
+        # current_app.extensions['security'].datastore.delete_user(user)
+        # Let's do it by hand
+        user.delete_instance(recursive=True)
+        flash("User {} was deleted.".format(user_email), "success")
+        return redirect(url_for('.index'), code=303)
+    return render_template('useradmin/delete_user.html',
+        form=form, user=user)
 
 ## App init
 
@@ -180,13 +210,28 @@ def init_auth(app):
     app.before_first_request(lambda: _init_auth_datastore(user_datastore))
 
 def _init_auth_datastore(datastore):
+    # If it's a fresh database, create an initial admin user.
     if not User.table_exists():
         for Model in (User, Role, UserRoles):
             Model.create_table(fail_silently=True)
+        initial_admin_email = 'youshould@change.me'
+        from random import _urandom
+        initial_admin_password = \
+            _urandom(12).encode('base-64')[:-2]
         admin_user = datastore.create_user(
-            email='youshould@change.me',
-            password=encrypt_password('YouShouldChangeThisPassword!!1'),
+            email=initial_admin_email,
+            password=encrypt_password(initial_admin_password),
             active=True)
         admin_role = datastore.create_role(name='admin')
+        flash("""Fresh installation: Login as "{}" with password "{}",
+and change your email and password via the user admin interface.
+This message only appears once!""".format(
+            initial_admin_email, initial_admin_password), "danger")
         datastore.add_role_to_user(admin_user, admin_role)
-        datastore.create_role(name='staff')
+        logout_user() # in case there's a stale cookie
+
+    # This is *always* done (in case new roles were added)
+    # Heads up: USER_ROLES are hard-coded at __init__.py
+    for role_name in current_app.config['USER_ROLES']:
+        if not datastore.find_role(role_name):
+            datastore.create_role(name=role_name)
