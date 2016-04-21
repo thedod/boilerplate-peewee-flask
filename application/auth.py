@@ -1,10 +1,8 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, \
     request, abort, redirect, current_app
-from peewee import *
+import peewee
 from flask_wtf import Form
-from wtforms import Form as WtfForm, StringField, PasswordField, \
-    BooleanField, FormField, SubmitField
-from wtforms.fields.html5 import EmailField
+import wtforms
 from wtforms import validators
 from wtfpeewee.orm import model_form
 from flask_security import Security, PeeweeUserDatastore, \
@@ -16,8 +14,8 @@ from .db import database
 ## Models
 
 class Role(database.Model, RoleMixin):
-    name = CharField(unique=True)
-    description = TextField(null=True)
+    name = peewee.CharField(unique=True)
+    description = peewee.TextField(null=True)
 
     def __unicode__(self):
         return self.name
@@ -26,20 +24,10 @@ class Role(database.Model, RoleMixin):
         order_by = ('name', )
 
 class User(database.Model, UserMixin):
-    email = CharField()
-    password = CharField()
-    # Peewee seems to have a problem with Booleanfield.
-    # At the moment active is a property. Checking this...
-    _activint = IntegerField(default=1)
-    confirmed_at = DateTimeField(null=True)
-
-    @property
-    def active(self):
-        return self._activint!=0
-
-    @active.setter
-    def active(self, value):
-        self._activint = value and 1 or 0
+    email = peewee.CharField()
+    password = peewee.CharField()
+    active = peewee.BooleanField(default=True)
+    confirmed_at = peewee.DateTimeField(null=True)
 
     def __unicode__(self):
         return self.email
@@ -52,8 +40,8 @@ class UserRoles(database.Model):
     # Because peewee does not come with built-in many-to-many
     # relationships, we need this intermediary class to link
     # user to roles.
-    user = ForeignKeyField(User, related_name='roles')
-    role = ForeignKeyField(Role, related_name='users')
+    user = peewee.ForeignKeyField(User, related_name='roles')
+    role = peewee.ForeignKeyField(Role, related_name='users')
     name = property(lambda self: self.role.name)
     description = property(lambda self: self.role.description)
 
@@ -88,36 +76,36 @@ def _validate_user_does_not_exist(exclude=None):
 
 def _user_roles_form(user=None):
     user_roles = user and [ur.name for ur in user.roles] or []
-    class URF(WtfForm):
+    class URF(wtforms.Form):
         pass
     for r in Role.select():
         if user and r.name=='admin' and user.id==current_user.id:
-            setattr(URF, r.name, BooleanField(default=r.name in user_roles,
+            setattr(URF, r.name, wtforms.BooleanField(default=r.name in user_roles,
                 validators=[_validate_on(
                     message="You can't remove your own admin role.")]))
         else:
-            setattr(URF, r.name, BooleanField(default=r.name in user_roles))
+            setattr(URF, r.name, wtforms.BooleanField(default=r.name in user_roles))
     return URF
 
 def user_form(user=None):
     class UF(Form):
-        email = EmailField('Email', default=user and user.email or None,
+        email = wtforms.fields.html5.EmailField('Email', default=user and user.email or None,
             validators=[
                 validators.DataRequired(),
                 validators.Email(),
                 _validate_user_does_not_exist(
                     exclude=user and user.email or None)])
-        password1 = PasswordField('New password',
+        password1 = wtforms.PasswordField('New password',
             validators = [
                 not user and validators.Required() or validators.Optional(),
                 validators.Length(min=10,
                     message='Password should be at least 10 characters long.')])
-        password2 = PasswordField('Repeat password',
+        password2 = wtforms.PasswordField('Repeat password',
             validators = [
                 validators.EqualTo('password1',
                     message="Passwords didn't match.")])
         # Note: by default, a new user is active
-        active = BooleanField('Active',default=not user or user.active,
+        active = wtforms.BooleanField('Active',default=not user or user.active,
             validators=(user and user.id==current_user.id and \
                 [_validate_on(message="You can't deactivate yourself.")] or \
                 []))
@@ -125,10 +113,10 @@ def user_form(user=None):
     return UF
 
 class DeleteForm(Form):
-    confirmation = BooleanField("I know what I'm doing.",
+    confirmation = wtforms.BooleanField("I know what I'm doing.",
         validators=[_validate_on(
             message="You have to know what you're doing.")])
-    submit = SubmitField("Delete")
+    submit = wtforms.SubmitField("Delete")
  
 ## Views
 

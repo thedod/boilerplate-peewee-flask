@@ -9,7 +9,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, \
     current_app
 from flask_bootstrap import __version__ as FLASK_BOOTSTRAP_VERSION
 from flask_nav.elements import Navbar, View, Subgroup, Link, Text, Separator
-from flask_security import login_required, current_user
+from flask_security import login_required, roles_required, current_user
 from markupsafe import escape
 
 from .forms import SignupForm
@@ -78,6 +78,7 @@ def members():
 
 @frontend.route('/site-editor')
 @login_required
+@roles_required('editor')
 def site_editor():
     return render_template('site_editor.html')
 

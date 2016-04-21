@@ -1,4 +1,4 @@
-from peewee import *
-from playhouse.flask_utils import FlaskDB
+from peewee import *  # no other way to reach playhouse :(
+from playhouse import flask_utils
 
-database = FlaskDB()
+database = flask_utils.FlaskDB()
