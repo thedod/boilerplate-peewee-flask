@@ -1,0 +1,67 @@
+{%- extends "base.html" %}
+{% from "bootstrap/utils.html" import icon %}
+{%- block title -%}
+  Site editor &mdash; {{ super() }}
+{%- endblock -%}
+{%- block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>
+      Site editor
+      {%- if pagination.get_page_count()>1 %}
+        <small>
+          {{ pagination.get_page() }}/{{ pagination.get_page_count() }}</small>
+        </small>
+      {%- endif %}
+    </h1>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {% include "_pagination.html" %}
+      <table class="table table-striped table-hover table-bordered table-condensed">
+        <tr class="info">
+          <th style="width:5%">
+            <a class="btn btn-xs btn-primary"
+              href="{{ url_for('backend.create_or_edit_news_item') }}">
+              {{ icon('plus') }}
+            </a>
+          </th>
+          <th style="width:5%" class="text-center">Members</th>
+          <th>Title</th>
+          <th style="width:10%">Created</th>
+          <th style="width:10%">Modified</th>
+        </tr>
+        {%- for o in object_list %}
+          <tr>
+            <td nowrap>
+              <a class="btn btn-xs btn-primary"
+                href="{{
+                  url_for('backend.create_or_edit_news_item', news_item_id=o.id)
+                }}">
+                {{ icon('pencil') }}
+              </a>
+              <a class="btn btn-xs btn-danger"
+                href="{{
+                  url_for('backend.delete_news_item', news_item_id=o.id)
+                }}">
+                {{ icon('remove') }}
+              </a>
+            </td>
+            <td class="text-center">
+              {%- if o.members_only -%}
+                {{ icon('ok') }}
+              {% else %}
+                {{ icon('remove') }}
+              {%- endif -%}
+            </td>
+            <td>{{ o.title }}</td>
+            <td nowrap>{{ o.created.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td nowrap>{{ o.modified.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+          </tr>
+        {%- endfor %}
+      </table>
+      {% include "_pagination.html" %}
+    </div>
+  </div>
+</div>
+{%- endblock %}

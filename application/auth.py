@@ -1,16 +1,16 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, \
-    request, abort, redirect, current_app
+    request, redirect, current_app
 import peewee
 from flask_wtf import Form
 import wtforms
 from wtforms import validators
 from wtforms.fields import html5 as wtforms_html5
-from wtfpeewee.orm import model_form
 from flask_security import Security, PeeweeUserDatastore, \
     UserMixin, RoleMixin, login_required, roles_required, \
     current_user, logout_user
 from flask_security.utils import encrypt_password
-from .db import database
+from .db import database, peewee_flask_utils
+from .forms import DeleteForm, validate_checked
 
 ## Models
 
@@ -57,14 +57,6 @@ class UserRoles(database.Model):
 
 ## Validators
 
-def _validate_on(message="Can't disable this."):
-    def validator(form, field):
-        if not field.data:
-            # Kludge: flask_bootstrap form_field macro ignores checkbox errors.
-            flash(message, "danger")
-            raise validators.ValidationError(message)
-    return validator
-
 def _validate_user_does_not_exist(exclude=None):
     def validator(form, field):
         if field.data!=exclude and \
@@ -82,7 +74,7 @@ def _user_roles_form(user=None):
     for r in Role.select():
         if user and r.name=='admin' and user.id==current_user.id:
             setattr(URF, r.name, wtforms.BooleanField(default=r.name in user_roles,
-                validators=[_validate_on(
+                validators=[validate_checked(
                     message="You can't remove your own admin role.")]))
         else:
             setattr(URF, r.name, wtforms.BooleanField(default=r.name in user_roles))
@@ -109,16 +101,10 @@ def user_form(user=None):
         # Note: by default, a new user is active
         active = wtforms.BooleanField('Active',default=not user or user.active,
             validators=(user and user.id==current_user.id and \
-                [_validate_on(message="You can't deactivate yourself.")] or \
+                [validate_checked(message="You can't deactivate yourself.")] or \
                 []))
     setattr(UF, 'roles', wtforms.FormField(_user_roles_form(user)))
     return UF
-
-class DeleteForm(Form):
-    confirmation = wtforms.BooleanField("I know what I'm doing.",
-        validators=[_validate_on(
-            message="You have to know what you're doing.")])
-    submit = wtforms.SubmitField("Delete")
  
 ## Views
 
@@ -140,10 +126,7 @@ def index():
 @roles_required('admin')
 def create_or_edit_user(user_id=None):
     if user_id:
-        try:
-            user = User.get(id=user_id)
-        except User.DoesNotExist:
-            abort(404)
+        user = peewee_flask_utils.get_object_or_404(User, User.id==user_id)
     else:
         user = None  # Create a new user
     form = user_form(user)(request.form)
@@ -173,10 +156,7 @@ def create_or_edit_user(user_id=None):
 @login_required
 @roles_required('admin')
 def delete_user(user_id):
-    try:
-        user = User.get(id=user_id)
-    except User.DoesNotExist:
-        abort(404)
+    user = peewee_flask_utils.get_object_or_404(User, User.id==user_id)
     if user.id==current_user.id:
         flash("You can't delete your own user.", "danger")
         return redirect(url_for('.index'), code=303)

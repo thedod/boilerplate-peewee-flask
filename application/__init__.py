@@ -2,11 +2,14 @@ import os
 from flask import Flask, g
 from flask_appconfig import AppConfig
 from flask_bootstrap import Bootstrap
+from flask_misaka import Misaka
 
 from .frontend import frontend
+from .backend import backend
 from .nav import nav, init_custom_nav_renderer
 from .db import database
 from .auth import init_auth, useradmin
+from .models import NewsItem, init_models
 
 def stdout_logging(app):
     import sys, logging
@@ -43,13 +46,18 @@ def create_app(configfile=None):
     app.config['USER_ROLES'] = ['editor']
     init_auth(app)
 
+    init_models(app)
+
     app.config['BOOTSTRAP_SERVE_LOCAL'] = True  # CDNs are cancer
     Bootstrap(app)
+
+    Misaka(app)
 
     init_custom_nav_renderer(app)
     nav.init_app(app)
 
     app.register_blueprint(frontend)
+    app.register_blueprint(backend, url_prefix='/editors')
     app.register_blueprint(useradmin, url_prefix='/useradmin')
 
     return app

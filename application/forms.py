@@ -1,22 +1,30 @@
+from flask import flash
 from flask_wtf import Form
-from wtforms.fields import *
-from wtforms.validators import Required, Email
+import wtforms
+from wtforms import validators
 
+## validators
 
-class SignupForm(Form):
-    name = TextField(u'Your name', validators=[Required()])
-    password = TextField(u'Your favorite password', validators=[Required()])
-    email = TextField(u'Your email address', validators=[Email()])
-    birthday = DateField(u'Your birthday')
+def validate_checked(message="Can't disable this."):
+    def validator(form, field):
+        if not field.data:
+            # Kludge: flask_bootstrap form_field macro ignores checkbox errors.
+            flash(message, "danger")
+            raise validators.ValidationError(message)
+    return validator
 
-    a_float = FloatField(u'A floating point number')
-    a_decimal = DecimalField(u'Another floating point number')
-    a_integer = IntegerField(u'An integer')
+## Forms
 
-    now = DateTimeField(u'Current time',
-                        description='...for no particular reason')
-    sample_file = FileField(u'Your favorite file')
-    eula = BooleanField(u'I did not read the terms and conditions',
-                        validators=[Required('You must agree to not agree!')])
+class DeleteForm(Form):
+    confirmation = wtforms.BooleanField("I know what I'm doing.",
+        validators=[validate_checked(
+            message="You have to know what you're doing.")])
+    submit = wtforms.SubmitField("Delete")
 
-    submit = SubmitField(u'Signup')
+class NewsItemForm(Form):
+    title = wtforms.StringField('Title',
+        validators=[validators.Required()])
+    content = wtforms.TextAreaField('Content',
+        render_kw = {"rows": 15},
+        validators=[validators.Required()])
+    members_only = wtforms.BooleanField()

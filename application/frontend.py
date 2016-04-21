@@ -10,10 +10,11 @@ from flask import Blueprint, render_template, flash, redirect, url_for, \
 from flask_bootstrap import __version__ as FLASK_BOOTSTRAP_VERSION
 from flask_nav.elements import Navbar, View, Subgroup, Link, Text, Separator
 from flask_security import login_required, roles_required, current_user
-from markupsafe import escape
 
-from .forms import SignupForm
 from .nav import nav, ExtendedNavbar
+from .models import NewsItem
+from .db import peewee_flask_utils
+from .auth import User
 
 frontend = Blueprint('frontend', __name__)
 
@@ -41,7 +42,7 @@ def frontend_top_nav():
                         +navbar.right_items
             if current_user.has_role('editor'):
                 navbar.right_items = \
-                    (View('Site editor', 'frontend.site_editor'),)\
+                    (View('Site editor', 'backend.index'),)\
                         +navbar.right_items
                 
         else:
@@ -51,17 +52,16 @@ def frontend_top_nav():
 nav.register_element('frontend_top', frontend_top_nav)
 
 @frontend.route('/')
-def index():
-    return render_template('index.html')
+def index(page=None):
+    return peewee_flask_utils.object_list('index.html',
+        query=NewsItem.select().where(NewsItem.members_only==False),
+        check_bounds=False,  # we don't want 404 if empty
+        paginate_by=current_app.config['FRONTEND_ITEMS_PER_PAGE'])
 
 @frontend.route('/members')
 @login_required
-def members():
-    return render_template('members.html')
-
-@frontend.route('/site-editor')
-@login_required
-@roles_required('editor')
-def site_editor():
-    return render_template('site_editor.html')
-
+def members(page=None):
+    return peewee_flask_utils.object_list('members.html',
+        query=NewsItem.select().where(NewsItem.members_only==True),
+        check_bounds=False,  # we don't want 404 if empty
+        paginate_by=current_app.config['FRONTEND_ITEMS_PER_PAGE'])

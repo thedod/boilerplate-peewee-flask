@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{%- block title -%}
+  {% if news_item %}Edit "{{ news_item }}"{% else %}Create a news item{% endif %}
+  &mdash; {{ super() }} site editor
+{%- endblock -%}
+{% block content %}
+  <div class="container">
+    <div class="page-header">
+      <h1>
+        {%- if news_item -%}
+          Edit "{{ news_item }}"
+        {% else %}
+          Create a news item
+        {%- endif -%}
+      </h1>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <form class="form-horizontal" action="" method="POST">
+          {{ form.hidden_tag() }}
+          {{ wtf.form_errors(form, hiddens="only") }}
+          {{ wtf.form_field(form.title, form_type="horizontal") }}
+          {{ wtf.form_field(form.content, form_type="horizontal") }}
+          {{ wtf.form_field(form.members_only, form_type="horizontal") }}
+          <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+              <input class="btn btn-primary" id="submit" name="submit" value="Update" type="submit">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

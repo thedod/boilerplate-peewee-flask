@@ -1,10 +1,43 @@
 {%- extends "base.html" %}
 {% block title %}{{ config.SITE_TITLE }} &mdash; {{ config.SITE_SUBTITLE }}{% endblock %}
 {% block content %}
-  <div class="container">
-    <div class="jumbotron">
-      <h1>{{ config.SITE_TITLE }}</h1>
-       <p>{{ config.SITE_SUBTITLE }}</p>
+<div class="container">
+  <div class="jumbotron">
+    <h1>{{ config.SITE_TITLE }}</h1>
+     <p>{{ config.SITE_SUBTITLE }}</p>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h3>What's new?</h3>
+      {% if not object_list.count() %}
+        <div class="alert alert-warning">
+          Nothing new :(
+        </div>
+      {% endif %}
+      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        {% for o in object_list %}
+          <div class="panel panel-primary">
+            <div class="panel-heading" role="tab" id="heading-{{ o.id }}">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion"
+                  href="#collapse-{{ o.id }}"
+                  {%- if loop.first -%}aria-expanded="true"{%- endif -%}
+                  aria-controls="{{ o.id }}">
+                  {{ o.title }}
+                </a>
+              </h4>
+            </div>
+            <div id="collapse-{{ o.id }}" class="panel-collapse collapse{% if loop.first %} in{% endif %}"
+              role="tabpanel" aria-labelledby="heading-{{ o.id }}">
+              <div class="panel-body">
+                {{ o.content|markdown }}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      {% include "_pagination.html" %}
     </div>
   </div>
+</div>
 {%- endblock %}

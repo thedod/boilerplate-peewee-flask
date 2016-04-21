@@ -7,3 +7,4 @@ flask-security
 bcrypt
 peewee
 wtf-peewee
+flask-misaka
