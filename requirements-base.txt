@@ -6,5 +6,5 @@ flask-debugtoolbar
 flask-security
 bcrypt
 peewee
-wtf-peewee
+flask-wtf
 flask-misaka
