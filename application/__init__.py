@@ -4,11 +4,11 @@ from flask_appconfig import AppConfig
 from flask_bootstrap import Bootstrap
 from flask_misaka import Misaka
 
+from sitepack.nav import nav, init_custom_nav_renderer
+from sitepack.db import database
+from sitepack.auth import init_auth, useradmin
 from .frontend import frontend
 from .backend import backend
-from .nav import nav, init_custom_nav_renderer
-from .db import database
-from .auth import init_auth, useradmin
 from .models import NewsItem, init_models
 
 def stdout_logging(app):

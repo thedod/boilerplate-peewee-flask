@@ -1,5 +1,5 @@
 import peewee
-from .db import database, peewee_signals
+from sitepack.db import database, peewee_signals
 import datetime
 
 class NewsItem(database.Model, peewee_signals.Model):

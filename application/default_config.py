@@ -1,6 +1,5 @@
 SITE_TITLE = "Boilerplate app"
 SITE_SUBTITLE = "A site about nothing..."
-DEBUG_TB_INTERCEPT_REDIRECTS = False
 SECURITY_PASSWORD_HASH = 'bcrypt'
 SECURITY_URL_PREFIX = '/auth'
 SECURITY_CHANGEABLE = True

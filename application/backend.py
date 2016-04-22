@@ -2,9 +2,10 @@ from flask import Blueprint, render_template, flash, redirect, url_for, \
     request, redirect, current_app
 from flask_security import login_required, roles_required
 
-from .db import database, peewee_flask_utils
+from sitepack.db import database, peewee_flask_utils
+from sitepack.forms import DeleteForm
 from .models import NewsItem
-from .forms import NewsItemForm, DeleteForm
+from .forms import NewsItemForm
 
 backend = Blueprint('backend', __name__)
 

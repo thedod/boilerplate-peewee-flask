@@ -11,10 +11,9 @@ from flask_bootstrap import __version__ as FLASK_BOOTSTRAP_VERSION
 from flask_nav.elements import Navbar, View, Subgroup, Link, Text, Separator
 from flask_security import login_required, roles_required, current_user
 
-from .nav import nav, ExtendedNavbar
+from sitepack.nav import nav, ExtendedNavbar
+from sitepack.db import peewee_flask_utils
 from .models import NewsItem
-from .db import peewee_flask_utils
-from .auth import User
 
 frontend = Blueprint('frontend', __name__)
 
