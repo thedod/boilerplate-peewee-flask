@@ -108,7 +108,7 @@ def user_form(user=None):
  
 ## Views
 
-useradmin = Blueprint('useradmin', __name__)
+useradmin = Blueprint('useradmin', __name__, template_folder='templates')
 
 @useradmin.route('/')
 @login_required
