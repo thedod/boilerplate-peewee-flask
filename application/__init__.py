@@ -31,8 +31,8 @@ def create_app(configfile=None):
     # Kludges for heroku
     if 'DYNO' in os.environ:
         # HerokuConfig is only needed if you do smtp etc. but whatever.
-        from flask_appconfig import HerokuConfig
-        HerokuConfig(app)
+        # from flask_appconfig import HerokuConfig
+        # HerokuConfig(app)
         from flask_sslify import SSLify
         sslify = SSLify(app, permanent=True)
         stdout_logging(app)
