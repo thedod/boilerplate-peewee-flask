@@ -3,8 +3,8 @@
 {% block scripts %}
 {{ super() }}
 <script type="text/javascript">
-// rensponsivize all the images
-$('#accordion img').addClass('img-responsive')
+$('#accordion img').addClass('img-responsive') // rensponsivize all the images
+$('#accordion .panel-body a').attr('target','_blank') // _blankize all the links
 </script>
 {% endblock %}
 {% block content %}
@@ -27,9 +27,9 @@ $('#accordion img').addClass('img-responsive')
             <div class="panel-heading" role="tab" id="heading-{{ o.id }}">
               <h4 class="panel-title">
                 <a role="button" data-toggle="collapse" data-parent="#accordion"
-                  href="#collapse-{{ o.id }}"
-                  {%- if loop.first -%}aria-expanded="true"{%- endif -%}
-                  aria-controls="{{ o.id }}">
+                  href="#collapse-{{ o.id }}"{% if loop.first %}
+                  aria-expanded="true"{% endif %}
+                  aria-controls="collapse-{{ o.id }}">
                   {{ o.title }}
                 </a>
               </h4>
@@ -37,7 +37,7 @@ $('#accordion img').addClass('img-responsive')
             <div id="collapse-{{ o.id }}" class="panel-collapse collapse{% if loop.first %} in{% endif %}"
               role="tabpanel" aria-labelledby="heading-{{ o.id }}">
               <div class="panel-body">
-                {{ o.content|markdown }}
+                {{ o.content|markdown(autolink=True) }}
               </div>
             </div>
           </div>
