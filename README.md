@@ -1,6 +1,6 @@
 ### A Peewee+Flask_Security Boilerplate App
 
-#### [Demo](https://boilerplate-peewee-flask)
+#### [Demo](https://boilerplate-peewee-flask.herokuapp.com)
 
 This is my [Flask](http://flask.pocoo.org) /
 [Peewee](http://peewee.readthedocs.org) /
@@ -52,6 +52,13 @@ heroku open
 
 Everyting is under `application/`. Stuff that *isn't* app-specific is under
 `application/sitepack/`.
+
+Stuff directly under `application/` is the
+[demo app](https://boilerplate-peewee-flask.herokuapp.com) and you'd probably want to
+rewrite most of it, but note that `application/templates/security` and
+`application/sitepack/templates/base.html` are symlinks (from `application/`
+to `sitepack/` and back), so if you move things around, remember to update them.
+
 `application/default_config.py` contains settings that assume you don't want
 SMTP (this is intended for inhouse apps, where users don't register via web, but
 rather ask an admin for an account).
