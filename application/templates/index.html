@@ -1,5 +1,5 @@
 {%- extends "base.html" %}
-{% block title %}{{ config.SITE_TITLE }} &mdash; {{ config.SITE_SUBTITLE }}{% endblock %}
+{% block title %}{{ babel_config('SITE_TITLE') }} &mdash; {{ babel_config('SITE_SUBTITLE') }}{% endblock %}
 {% block scripts %}
 {{ super() }}
 <script type="text/javascript">
@@ -10,18 +10,18 @@ $('#accordion .panel-body a').attr('target','_blank') // _blankize all the links
 {% block content %}
 <div class="container">
   <div class="jumbotron">
-    <h1>{{ config.SITE_TITLE }}</h1>
-     <p>{{ config.SITE_SUBTITLE }}</p>
+    <h1>{{ babel_config('SITE_TITLE') }}</h1>
+     <p>{{ babel_config('SITE_SUBTITLE') }}</p>
   </div>
   <div class="row">
     <div class="col-md-12">
-      <h3>What's new?</h3>
+      <h3>{{ _("What's new?") }}</h3>
       {% if not object_list.count() %}
         <div class="alert alert-warning">
-          Nothing new :(
+          {{ _('Nothing new') }} :(
         </div>
       {% endif %}
-      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="direction: ltr">
         {% for o in object_list %}
           <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="heading-{{ o.id }}">

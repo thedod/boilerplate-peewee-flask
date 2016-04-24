@@ -7,6 +7,7 @@ from flask_misaka import Misaka
 from sitepack.nav import nav, init_custom_nav_renderer
 from sitepack.db import database
 from sitepack.auth import init_auth, useradmin
+from sitepack.babel_by_url import BabelByUrl
 from .frontend import frontend
 from .backend import backend
 from .models import NewsItem, init_models
@@ -35,10 +36,13 @@ def create_app(configfile=None):
         HerokuConfig(app)
         from flask_sslify import SSLify
         sslify = SSLify(app, permanent=True)
+        app.config['PREFERRED_URL_SCHEME'] = 'https'
         stdout_logging(app)
         app.config['DATABASE'] = os.environ.get('DATABASE_URL')
 
     database.init_app(app)
+
+    bbu = BabelByUrl(app)
 
     ## Note: if you remove roles, they *don't* get removed from
     # an existing datastore (flask_security doens't support that),
@@ -59,8 +63,8 @@ def create_app(configfile=None):
     init_custom_nav_renderer(app)
     nav.init_app(app)
 
-    app.register_blueprint(frontend)
-    app.register_blueprint(backend, url_prefix='/editors')
+    bbu.register_blueprint(frontend, template_folder='templates')
+    bbu.register_blueprint(backend, url_prefix='/editors')
     app.register_blueprint(useradmin, url_prefix='/useradmin', template_folder='sitepack/templates')
 
     return app

@@ -6,3 +6,4 @@ bcrypt
 peewee
 flask-wtf
 flask-misaka
+flask-babel

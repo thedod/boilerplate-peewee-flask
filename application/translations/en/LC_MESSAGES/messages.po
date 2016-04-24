@@ -1,0 +1,68 @@
+# English translations for PROJECT.
+# Copyright (C) 2016 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2016-04-24 01:58+0300\n"
+"PO-Revision-Date: 2016-04-24 08:26+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: frontend.py:28
+msgid "Home"
+msgstr ""
+
+#: frontend.py:29
+msgid "Members"
+msgstr ""
+
+#: frontend.py:35
+msgid "Logout"
+msgstr ""
+
+#: frontend.py:36
+msgid "Change password"
+msgstr ""
+
+#: frontend.py:40
+msgid "Site editor"
+msgstr ""
+
+#: frontend.py:43
+msgid "User admin"
+msgstr ""
+
+#: frontend.py:45
+msgid "Login"
+msgstr ""
+
+#: templates/index.html:18 templates/members.html:19
+msgid "What's new?"
+msgstr ""
+
+#: templates/index.html:21
+msgid "Nothing new"
+msgstr ""
+
+#: templates/members.html:14
+msgid "Member area"
+msgstr ""
+
+#: templates/members.html:15
+msgid "Stuff here is exclusive."
+msgstr ""
+
+#: templates/members.html:22
+msgid "Nothing special"
+msgstr ""
+

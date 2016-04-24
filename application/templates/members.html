@@ -11,18 +11,18 @@ $('#accordion .panel-body a').attr('target','_blank') // _blankize all the links
 {% block content %}
 <div class="container">
   <div class="jumbotron">
-    <h1>Member area</h1>
-    <p>{{ icon('lock') }} Stuff here is exclusive.</p>
+    <h1>{{ _('Member area') }}</h1>
+    <p>{{ icon('lock') }} {{ _('Stuff here is exclusive.') }}</p>
   </div>
   <div class="row">
     <div class="col-md-12">
-      <h3>What's new?</h3>
+      <h3>{{ _("What's new?") }}</h3>
       {% if not object_list.count() %}
         <div class="alert alert-warning">
-          Nothing special :(
+          {{ _('Nothing special') }} :(
         </div>
       {% endif %}
-      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="direction:ltr">
         {% for o in object_list %}
           <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="heading-{{ o.id }}">

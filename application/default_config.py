@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
 SITE_TITLE = "Boilerplate app"
+SITE_TITLE_HE = u"אפליקציה לדוגמציה"
 SITE_SUBTITLE = "A site about nothing..."
+SITE_SUBTITLE_HE = u"אתר על ריק..."
 SECURITY_PASSWORD_HASH = 'bcrypt'
 SECURITY_URL_PREFIX = '/auth'
 SECURITY_CHANGEABLE = True

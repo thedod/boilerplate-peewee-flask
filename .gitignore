@@ -3,3 +3,4 @@ venv/
 dev.db
 *.pyc
 .*.swp
+*.pot

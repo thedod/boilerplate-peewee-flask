@@ -1,7 +1,9 @@
 from flask_nav import Nav
 from dominate import tags
-from flask_nav.elements import NavigationItem
+from flask_nav.elements import NavigationItem, View
 from flask_bootstrap.nav import BootstrapRenderer, sha1
+from flask import url_for, current_app
+from .babel_by_url import babel_config, babel_url_for
 
 class ExtendedNavbar(NavigationItem):
     def __init__(self, title, root_class='navbar navbar-default', items=[], right_items=[]):
@@ -9,6 +11,15 @@ class ExtendedNavbar(NavigationItem):
         self.root_class = root_class
         self.items = items
         self.right_items = right_items
+
+class BabelView(View):
+    def __init__(self, text, endpoint, babel_language=None, **kwargs):
+        super(BabelView, self).__init__(text, endpoint, **kwargs)
+        self.babel_language = babel_language
+        
+    def get_url(self):
+        return babel_url_for(self.endpoint, self.babel_language,
+            **self.url_for_kwargs)
 
 class CustomBootstrapRenderer(BootstrapRenderer):
 
