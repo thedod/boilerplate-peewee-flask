@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
 {%- block title -%}
-  Delete news item: {{ news_item }}
+  {{ _('Delete news item') }}: "{{ news_item }}"
   &mdash; {{ super() }} site editor
 {%- endblock -%}
 {% block content %}
   <div class="container">
     <div class="page-header">
-      <h1>Delete news item: {{ news_item }}</h1>
+      <h1>{{ _('Delete news item') }}: "{{ news_item }}"</h1>
     </div>
     <div class="row">
       <div class="col-md-12">

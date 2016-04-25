@@ -2,6 +2,7 @@ from flask import flash
 from flask_wtf import Form
 import wtforms
 from wtforms import validators
+from flask_babel import gettext as _, lazy_gettext
 
 ## validators
 
@@ -16,7 +17,7 @@ def validate_checked(message="Can't disable this."):
 ## Forms
 
 class DeleteForm(Form):
-    confirmation = wtforms.BooleanField("I know what I'm doing.",
+    confirmation = wtforms.BooleanField(lazy_gettext("I know what I'm doing."),
         validators=[validate_checked(
-            message="You have to know what you're doing.")])
-    submit = wtforms.SubmitField("Delete")
+            message=lazy_gettext("You have to know what you're doing."))])
+    submit = wtforms.SubmitField(lazy_gettext("Delete"))

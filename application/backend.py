@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, \
     request, redirect, current_app
 from flask_security import login_required, roles_required
+from flask_babel import gettext as _
 
 from sitepack.db import database, peewee_flask_utils
 from sitepack.forms import DeleteForm
@@ -35,7 +36,7 @@ def create_or_edit_news_item(news_item_id=None):
             news_item.save()
         else:
             news_item=NewsItem.create(**form.data)
-        flash('Item "{}" was updated.'.format(news_item.title), "success")
+        flash(_('News Item "{}" was updated.').format(news_item.title), "success")
         return redirect(url_for('.index'), code=303)
     return render_template('backend/create_or_edit_news_item.html',
         form=form, news_item=news_item)
@@ -50,7 +51,7 @@ def delete_news_item(news_item_id):
     if form.validate_on_submit():
         news_item_title = news_item.title
         news_item.delete_instance()
-        flash("News item {} was deleted.".format(news_item_title), "success")
+        flash(_('News item "{}" was deleted.').format(news_item_title), "success")
         return redirect(url_for('.index'), code=303)
     return render_template('backend/delete_news_item.html',
         form=form, news_item=news_item)

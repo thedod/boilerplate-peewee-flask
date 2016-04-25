@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-04-24 01:58+0300\n"
+"POT-Creation-Date: 2016-04-25 23:11+0300\n"
 "PO-Revision-Date: 2016-04-23 18:18+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: he\n"
@@ -17,6 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
+
+#: backend.py:39
+msgid "News Item \"{}\" was updated."
+msgstr "ידיעה \"{}\" עודכנה."
+
+#: backend.py:54
+msgid "News item \"{}\" was deleted."
+msgstr "ידיעה \"{}\" נמחקה."
 
 #: frontend.py:28
 msgid "Home"
@@ -30,21 +38,119 @@ msgstr "מנויים"
 msgid "Logout"
 msgstr "התנתקות"
 
-#: frontend.py:36
+#: frontend.py:36 sitepack/templates/security/change_password.html:3
+#: sitepack/templates/security/change_password.html:6
 msgid "Change password"
 msgstr "שינוי סיסמה"
 
-#: frontend.py:40
+#: frontend.py:40 templates/backend/index.html:4
+#: templates/backend/index.html:10
 msgid "Site editor"
 msgstr "עריכת האתר"
 
-#: frontend.py:43
+#: frontend.py:43 sitepack/templates/useradmin/index.html:3
+#: sitepack/templates/useradmin/index.html:7
 msgid "User admin"
 msgstr "ניהול משתמשים"
 
-#: frontend.py:45
+#: frontend.py:45 sitepack/templates/security/_menu.html:6
+#: sitepack/templates/security/login_user.html:3
+#: sitepack/templates/security/login_user.html:6
 msgid "Login"
 msgstr "התחברות"
+
+#: sitepack/auth.py:80
+msgid "You can't remove your own admin role."
+msgstr "אין באפשרותך לבטל את תפקיד הניהול של עצמך."
+
+#: sitepack/auth.py:98
+msgid "Password should be at least 10 characters long."
+msgstr "הסיסמה צריכה להיות באורך 10 תווים לפחות."
+
+#: sitepack/auth.py:102
+msgid "Passwords didn't match."
+msgstr "הסיסמאות לא היו זהות."
+
+#: sitepack/auth.py:106
+msgid "You can't deactivate yourself."
+msgstr "אין באפשרותך להקפיא את החשבון של עצמך."
+
+#: sitepack/auth.py:152
+msgid "User {} was updated."
+msgstr "החשבון {} עודכן"
+
+#: sitepack/auth.py:163
+msgid "You can't delete your own user."
+msgstr "אין באפשרותך למחוק את החשבון של עצמך."
+
+#: sitepack/auth.py:172
+msgid "User {} was deleted."
+msgstr "החשבון {} נמחק"
+
+#: sitepack/forms.py:20
+msgid "I know what I'm doing."
+msgstr "אני עושה זאת בדעה צלולה."
+
+#: sitepack/forms.py:22
+msgid "You have to know what you're doing."
+msgstr "יש לעשות זאת בדעה צלולה."
+
+#: sitepack/forms.py:23
+msgid "Delete"
+msgstr "מחיקה"
+
+#: sitepack/templates/security/_menu.html:9
+msgid "Register"
+msgstr "הרשמה"
+
+#: sitepack/templates/security/_menu.html:12
+msgid "Forgot password"
+msgstr "שכחתי סיסמה"
+
+#: sitepack/templates/security/_menu.html:15
+msgid "Confirm account"
+msgstr "אישור כתובת דואר"
+
+#: sitepack/templates/security/forgot_password.html:3
+#: sitepack/templates/security/forgot_password.html:6
+msgid "Send password reset instructions"
+msgstr "שליחת קישור לאיתחול סיסמה בדואר"
+
+#: sitepack/templates/security/register_user.html:3
+#: sitepack/templates/security/register_user.html:6
+msgid "Sign up"
+msgstr "הרשמה"
+
+#: sitepack/templates/security/send_confirmation.html:3
+#: sitepack/templates/security/send_confirmation.html:6
+msgid "Resend confirmation instructions"
+msgstr "שליחת קישור לאימות כתובת דואר"
+
+#: sitepack/templates/useradmin/create_or_edit_user.html:4
+#: sitepack/templates/useradmin/create_or_edit_user.html:12
+msgid "Edit user"
+msgstr "עריכת חשבון"
+
+#: sitepack/templates/useradmin/create_or_edit_user.html:4
+#: sitepack/templates/useradmin/create_or_edit_user.html:14
+msgid "Create a user"
+msgstr "יצירת חשבון"
+
+#: sitepack/templates/useradmin/create_or_edit_user.html:31
+msgid "Roles"
+msgstr "תפקידים"
+
+#: sitepack/templates/useradmin/create_or_edit_user.html:43
+msgid "Update"
+msgstr "עדכון"
+
+#: templates/_pagination.html:6
+msgid "Newer items"
+msgstr "ידיעות חדשות יותר"
+
+#: templates/_pagination.html:13
+msgid "Older items"
+msgstr "ידיעות ישנות יותר"
 
 #: templates/index.html:18 templates/members.html:19
 msgid "What's new?"
@@ -65,3 +171,25 @@ msgstr "המידעים כאן הם בלעדיים בלבד."
 #: templates/members.html:22
 msgid "Nothing special"
 msgstr "שום דבר מיוחד"
+
+#: templates/backend/create_or_edit_news_item.html:4
+#: templates/backend/create_or_edit_news_item.html:12
+msgid "Edit"
+msgstr "עריכת"
+
+#: templates/backend/create_or_edit_news_item.html:4
+#: templates/backend/create_or_edit_news_item.html:14
+msgid "Create a news item"
+msgstr "יצירת ידיעה חדשה"
+
+#: templates/backend/delete_news_item.html:4
+#: templates/backend/delete_news_item.html:10
+msgid "Delete news item"
+msgstr "מחיקת ידיעה"
+
+#~ msgid "I know what I'm doing."
+#~ msgstr "אני עושה זאת בדעה צלולה."
+
+#~ msgid "You have to know what you're doing."
+#~ msgstr "יש לעשות זאת בדעה צלולה."
+

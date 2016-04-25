@@ -42,7 +42,7 @@ def create_app(configfile=None):
 
     database.init_app(app)
 
-    bbu = BabelByUrl(app)
+    BabelByUrl(app)
 
     ## Note: if you remove roles, they *don't* get removed from
     # an existing datastore (flask_security doens't support that),
@@ -63,8 +63,8 @@ def create_app(configfile=None):
     init_custom_nav_renderer(app)
     nav.init_app(app)
 
-    bbu.register_blueprint(frontend, template_folder='templates')
-    bbu.register_blueprint(backend, url_prefix='/editors')
+    app.register_blueprint(frontend, template_folder='templates')
+    app.register_blueprint(backend, url_prefix='/editors')
     app.register_blueprint(useradmin, url_prefix='/useradmin', template_folder='sitepack/templates')
 
     return app

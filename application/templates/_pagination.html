@@ -1,16 +1,16 @@
 <nav>
-  <ul class="pager">
+  <ul class="pager" style="direction:{{ session.language_direction }}">
     {%- if pagination.get_page()>1 -%}
       <li>
         <a href="?page={{ pagination.get_page()-1 }}">
-          Newer items
+          {{ _('Newer items') }}
         </a>
       </li>
     {%- endif -%}
     {%- if pagination.get_page()<pagination.get_page_count() -%}
       <li>
         <a href="?page={{ pagination.get_page()+1 }}">
-          Older items
+          {{ _('Older items') }}
         </a>
       </li>
     {%- endif -%}

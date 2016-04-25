@@ -1,13 +1,13 @@
 {%- extends "base.html" %}
 {% from "bootstrap/utils.html" import icon %}
 {%- block title -%}
-  Site editor &mdash; {{ super() }}
+  {{ _('Site editor') }} &mdash; {{ super() }}
 {%- endblock -%}
 {%- block content %}
 <div class="container">
   <div class="page-header">
     <h1>
-      Site editor
+      {{ _('Site editor') }}
       {%- if pagination.get_page_count()>1 %}
         <small>
           {{ pagination.get_page() }}/{{ pagination.get_page_count() }}</small>
@@ -18,18 +18,18 @@
   <div class="row">
     <div class="col-md-12">
       {% include "_pagination.html" %}
-      <table class="table table-striped table-hover table-bordered table-condensed">
+      <table class="table table-striped table-hover table-bordered table-condensed" style="direction:ltr">
         <tr class="info">
-          <th style="width:5%">
+          <th style="width:5%; text-align:left">
             <a class="btn btn-xs btn-primary"
               href="{{ url_for('backend.create_or_edit_news_item') }}">
               {{ icon('plus') }}
             </a>
           </th>
           <th style="width:5%" class="text-center">Members</th>
-          <th>Title</th>
-          <th style="width:10%">Created</th>
-          <th style="width:10%">Modified</th>
+          <th style="text-align:left">Title</th>
+          <th style="width:10%; text-align:left">Created</th>
+          <th style="width:10%; text-align:left">Modified</th>
         </tr>
         {%- for o in object_list %}
           <tr>
