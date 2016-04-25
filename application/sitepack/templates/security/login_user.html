@@ -1,17 +1,21 @@
 {% extends 'base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %}Please login &mdash; {{ super() }}{% endblock %}
+{% block title %}{{ _('Login') }} &mdash; {{ super() }}{% endblock %}
 {% block content %}
   <div class="container">
-    <div class="page-header"><h1>Login</h1></div>
+    <div class="page-header"><h1>{{ _('Login') }}</h1></div>
     <div class="row">
       <div class="col-md-12">
-        <form class="form-horizontal" action="{{ url_for_security('login') }}" method="POST" name="login_user_form">
+        <form class="form-horizontal" style="direction:ltr"
+               action="{{ url_for_security('login') }}"
+               method="POST" name="login_user_form">
           {{ login_user_form.hidden_tag() }}
           {{ wtf.form_errors(login_user_form, hiddens="only") }}
           {{ wtf.form_field(login_user_form.email, form_type="horizontal") }}
           {{ wtf.form_field(login_user_form.password, form_type="horizontal") }}
-          {{ wtf.form_field(login_user_form.remember, form_type="horizontal") }}
+          <div style="direction:{{ session.language_direction }}">
+              {{ wtf.form_field(login_user_form.remember, form_type="horizontal") }}
+          </div>
           {{ login_user_form.next }}
           {{ wtf.form_field(login_user_form.submit, form_type="horizontal", button_map={"submit":"primary"}) }}
         </form>

@@ -21,6 +21,7 @@ $('#accordion .panel-body a').attr('target','_blank') // _blankize all the links
           {{ _('Nothing new') }} :(
         </div>
       {% endif %}
+      {% include "_pagination.html" %}
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="direction: ltr">
         {% for o in object_list %}
           <div class="panel panel-default">

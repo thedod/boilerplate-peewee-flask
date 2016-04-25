@@ -1,4 +1,7 @@
 {%- extends "bootstrap/base.html" %}
+{%- block html_attribs %}
+  {%- if session.language_code %}language="{{ session.language_code }}"{%- endif %}
+{%- endblock html_attribs %}
 
 {% block title %}{{ config.SITE_TITLE }}{% endblock %}
 
@@ -15,7 +18,7 @@
 {% block styles -%}
     {{super()}}  {# do not forget to call super or Bootstrap's own stylesheets
                     will disappear! #}
-    {% if g.is_rtl %}
+    {% if session.language_direction=='rtl' %}
       <link rel="stylesheet" type="text/css"
             href="{{url_for('static', filename='css/bootstrap-flipped.min.css')}}">
     {% endif %}

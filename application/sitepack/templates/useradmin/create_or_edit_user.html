@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
 {%- block title -%}
-  {% if user %}Edit user: {{ user }}{% else %}Create a user{% endif %}
+  {% if user %}{{ _('Edit user') }}: {{ user }}{% else %}{{ _('Create a user') }}{% endif %}
   &mdash; {{ super() }} user admin
 {%- endblock -%}
 {% block content %}
@@ -9,33 +9,39 @@
     <div class="page-header">
       <h1>
         {%- if user -%}
-          Edit user: {{ user }}
+          {{ _('Edit user') }}: {{ user }}
         {% else %}
-          Create a user
+          {{ _('Create a user') }}
         {%- endif -%}
       </h1>
     </div>
     <div class="row">
       <div class="col-md-12">
-        <form class="form-horizontal" action="" method="POST">
+        <form class="form-horizontal" action="" method="POST" style="direction:ltr">
           {{ form.hidden_tag() }}
           {{ wtf.form_errors(form, hiddens="only") }}
           {{ wtf.form_field(form.email, form_type="horizontal") }}
           {{ wtf.form_field(form.password1, form_type="horizontal") }}
           {{ wtf.form_field(form.password2, form_type="horizontal") }}
-          {{ wtf.form_field(form.active, form_type="horizontal") }}
+          <div style="direction:{{ session.language_direction }}">
+            {{ wtf.form_field(form.active, form_type="horizontal") }}
+          </div>
           <div class="form-group">
-            <div class="col-lg-offset-2 col-lg-10">
-              <h3>Roles:</h3>
+            <div class="col-lg-offset-2 col-lg-10"
+              style="direction:{{ session.language_direction }}">
+              <h3>{{ _('Roles') }}:</h3>
             </div>
           </div>
           {{ wtf.form_errors(form.roles.form, hiddens="only") }}
-          {% for field in form.roles.form %}
-            {{ wtf.form_field(field, form_type="horizontal") }}
-          {%- endfor %}
+          <div style="direction:{{ session.language_direction }}">
+            {% for field in form.roles.form %}
+              {{ wtf.form_field(field, form_type="horizontal") }}
+            {%- endfor %}
+          </div>
           <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
-              <input class="btn btn-primary" id="submit" name="submit" value="Update" type="submit">
+              <input class="btn btn-primary" id="submit" name="submit"
+                value="{{ _('Update') }}" type="submit">
             </div>
           </div>
         </form>

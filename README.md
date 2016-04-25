@@ -5,8 +5,9 @@
 This is my [Flask](http://flask.pocoo.org) /
 [Peewee](http://peewee.readthedocs.org) /
 [Flask-Security](https://pythonhosted.org/Flask-Security) /
-[Flask-Bootstrap](http://pythonhosted.org/Flask-Bootstrap)
-"hello, world" du jour.
+[Flask-Bootstrap](http://pythonhosted.org/Flask-Bootstrap) /
+[Flask-Babel](https://pythonhosted.org/Flask-Babel/)
+"hello, world" du jour. Perhaps it may be useful for others, it is for me.
 
 #### Why?
 
@@ -109,3 +110,33 @@ receive, before you can login again.
 
 `SECURITY_PASSWORDLESS` and `SECURITY_TRACKABLE` are not supported, but should
 be pretty easy to support.
+
+#### Internationalization (Flask-Babel)
+
+IMHO, the sane way for site i18n is to derive locale from URL perfix (`/en/`,
+`/he/` etc.). This way search engines know what they `GET`, and tourists aren't
+stuck with a foreign language interface just because the hotel's browser accepts
+that language.
+
+The only question is what to do when there *isn't* such a prefix. I've decided
+that this means staying at the *previous* language (and hopefully URLs become
+explicit again once the user clicks on navigation links).
+
+The up side is that you don't need to monkey-patch [e.g.] `Flask-Security` to
+send the user to a language-specific page after login/logout/etc. but the down
+side is search engine consistency. IMHO this is acceptable, since if the user
+is looking for a German phrase, it is *guaranteed* to be found under `/de`
+(whether it also appears under `/` is left to chance. Life is a compromise).
+
+* At `__init__.py`'s `creat_app()` we do `BabelByUrl(app)` (instead of
+  `Babel(app)`). This adds wsgi middleware that extracts language code from
+  URL's path.
+* At `nav.py` there's `LocvalizedView()`, which is like `Flask_Nav`'s
+  `View()` but also prepends current (or suplied) language code to the path.
+* Templates can access `language_code` and `language_direction` session
+  variables. Code that might run before the session exists, can also use
+  `get_language_code()` that fails gracefully and returns the default.
+* Templates and code can also use `babel_config('KEY', language_code=None)` to
+  localize config variabless. For example: if language code is `pl`,
+  `babel_config('SITE_TITLE')` would try to get the `SITE_TITLE_PL` config var,
+  and fall back to `SITE_TITLE`.

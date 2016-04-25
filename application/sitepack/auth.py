@@ -12,6 +12,8 @@ from flask_security.utils import encrypt_password
 from .db import database, peewee_flask_utils
 from .forms import DeleteForm, validate_checked
 
+from flask_babel import gettext as _, lazy_gettext
+
 ## Models
 
 class Role(database.Model, RoleMixin):
@@ -75,7 +77,7 @@ def _user_roles_form(user=None):
         if user and r.name=='admin' and user.id==current_user.id:
             setattr(URF, r.name, wtforms.BooleanField(default=r.name in user_roles,
                 validators=[validate_checked(
-                    message="You can't remove your own admin role.")]))
+                    message=lazy_gettext("You can't remove your own admin role."))]))
         else:
             setattr(URF, r.name, wtforms.BooleanField(default=r.name in user_roles))
     return URF
@@ -93,15 +95,15 @@ def user_form(user=None):
             validators = [
                 not user and validators.Required() or validators.Optional(),
                 validators.Length(min=10,
-                    message='Password should be at least 10 characters long.')])
+                    message=lazy_gettext('Password should be at least 10 characters long.'))])
         password2 = wtforms.PasswordField('Repeat password',
             validators = [
                 validators.EqualTo('password1',
-                    message="Passwords didn't match.")])
+                    message=lazy_gettext("Passwords didn't match."))])
         # Note: by default, a new user is active
         active = wtforms.BooleanField('Active',default=not user or user.active,
             validators=(user and user.id==current_user.id and \
-                [validate_checked(message="You can't deactivate yourself.")] or \
+                [validate_checked(message=lazy_gettext("You can't deactivate yourself."))] or \
                 []))
     setattr(UF, 'roles', wtforms.FormField(_user_roles_form(user)))
     return UF
@@ -147,7 +149,7 @@ def create_or_edit_user(user_id=None):
                 ds.add_role_to_user(user, r.name)
             else:
                 ds.remove_role_from_user(user, r.name)
-        flash('User {} was updated.'.format(user.email), "success")
+        flash(_('User {} was updated.').format(user.email), "success")
         return redirect(url_for('.index'), code=303)
     return render_template('useradmin/create_or_edit_user.html',
         form=form, user=user)
@@ -158,7 +160,7 @@ def create_or_edit_user(user_id=None):
 def delete_user(user_id):
     user = peewee_flask_utils.get_object_or_404(User, User.id==user_id)
     if user.id==current_user.id:
-        flash("You can't delete your own user.", "danger")
+        flash(_("You can't delete your own user."), "danger")
         return redirect(url_for('.index'), code=303)
     form = DeleteForm(request.form)
     if form.validate_on_submit():
@@ -167,7 +169,7 @@ def delete_user(user_id):
         # current_app.extensions['security'].datastore.delete_user(user)
         # Let's do it by hand
         user.delete_instance(recursive=True)
-        flash("User {} was deleted.".format(user_email), "success")
+        flash(_("User {} was deleted.").format(user_email), "success")
         return redirect(url_for('.index'), code=303)
     return render_template('useradmin/delete_user.html',
         form=form, user=user)
@@ -193,6 +195,7 @@ def _init_auth_datastore(datastore):
             password=encrypt_password(initial_admin_password),
             active=True)
         admin_role = datastore.create_role(name='admin')
+        # No need to localize: it only appears once (i.e. in English).
         flash("""Fresh installation: Login as "{}" with password "{}",
 and change your email and password via the user admin interface.
 This message only appears once!""".format(
