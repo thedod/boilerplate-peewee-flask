@@ -128,7 +128,7 @@ side is search engine consistency. IMHO this is acceptable, since if the user
 is looking for a German phrase, it is *guaranteed* to be found under `/de`
 (whether it also appears under `/` is left to chance. Life is a compromise).
 
-* At `__init__.py`'s `creat_app()` we do `BabelByUrl(app)` (instead of
+* At `__init__.py`'s `create_app()` we do `BabelByUrl(app)` (instead of
   `Babel(app)`). This adds wsgi middleware that extracts language code from
   URL's path.
 * At `nav.py` there's `LocvalizedView()`, which is like `Flask_Nav`'s
