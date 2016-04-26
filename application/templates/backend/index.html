@@ -6,14 +6,7 @@
 {%- block content %}
 <div class="container">
   <div class="page-header">
-    <h1>
-      {{ _('Site editor') }}
-      {%- if pagination.get_page_count()>1 %}
-        <small>
-          {{ pagination.get_page() }}/{{ pagination.get_page_count() }}</small>
-        </small>
-      {%- endif %}
-    </h1>
+    <h1>{{ _('Site editor') }}</h1>
   </div>
   <div class="row">
     <div class="col-md-12">
