@@ -2,7 +2,7 @@ from flask_nav import Nav
 from dominate import tags
 from flask_nav.elements import NavigationItem, View
 from flask_bootstrap.nav import BootstrapRenderer, sha1
-from flask import url_for, current_app, g
+from flask import url_for, current_app, g, request
 from .babel_by_url import get_language_code
 
 class LocalizedView(View):
@@ -13,6 +13,16 @@ class LocalizedView(View):
     def get_url(self):
           return '/{}{}'.format(self.language_code or get_language_code(),
               super(LocalizedView, self).get_url())
+
+    @property
+    def active(self):
+        # middleware has already trimmed the language_code prefix,
+        # so [unless it's a language switcher], consult our ancestors :)
+        return (
+            (not self.language_code or
+                self.language_code==get_language_code()) and
+            request.path==super(LocalizedView, self).get_url())
+
 
 class ExtendedNavbar(NavigationItem):
     def __init__(self, title, root_class='navbar navbar-default', items=[], right_items=[]):
